@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNech Blog Site</title>
+     <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <nav class="nav-bar">
+                <a href="/">Home</a>
+                <a href="/dashboard">Dashboard</a>
+                {{#if }}
+                <button id="logout" class="logout-button">Logout</button>
+                <p class="login-info">logged in under {{username}}</p>
+                {{else}}
+                <a class="login-pstbtn" href="/login">Login</a>
+                {{/if}}
+            </nav>
+        </header>
+        <main>
+            {{{ body }}}
+        </main>
+        <footer>
+            Spread the Love!!
+        </footer>
+    </div>
+    {{#if }}
+    <script></script>
+    {{/if}}
+</body>
+</html>
