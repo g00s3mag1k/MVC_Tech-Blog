@@ -13,7 +13,7 @@
             <nav class="nav-bar">
                 <a href="/">Home</a>
                 <a href="/dashboard">Dashboard</a>
-                {{#if }}
+                {{#if logged_in }}
                 <button id="logout" class="logout-button">Logout</button>
                 <p class="login-info">logged in under {{username}}</p>
                 {{else}}
