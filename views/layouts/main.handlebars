@@ -10,26 +10,27 @@
 <body>
     <div class="wrap">
         <header>
-            <nav class="nav-bar">
-                <a href="/">Home</a>
-                <a href="/dashboard">Dashboard</a>
-                {{#if logged_in }}
-                <button id="logout" class="logout-button">Logout</button>
+            <nav class="nav">
+                <a class="link" href="/">Home</a>
+                <a class="link" href="/dashboard">Dashboard</a>
+                {{#if logged_in}}
+                <a id="logout" class="link" href="/">Logout</a>
                 <p class="login-info">logged in under {{username}}</p>
                 {{else}}
-                <a class="login-pstbtn" href="/login">Login</a>
+                <a class="link" href="/login">Login</a>
                 {{/if}}
             </nav>
+            <h1 class="app-title"><i class="head"></i>TechNech Blog</h1>
         </header>
         <main>
             {{{ body }}}
         </main>
         <footer>
-            Spread the Love!!
+            Share with Friends!!
         </footer>
     </div>
-    {{#if }}
-    <script></script>
+    {{#if logged_in}}
+    <script src="/js/logout.js"></script>
     {{/if}}
 </body>
 </html>
