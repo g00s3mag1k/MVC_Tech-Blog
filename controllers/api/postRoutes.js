@@ -3,7 +3,6 @@ const { Blogpost, User, Comment} = require('../../models');
 const sequelize = require('../../config/connection');
 const withAuth = require('../../utils/auth');
 
-// GET all posts
 router.get('/', (req, res) => {
     Blogpost.findAll({
         attributes: ['id', 'title', 'content', 'created_at'],
@@ -30,7 +29,6 @@ router.get('/', (req, res) => {
         });
 });
 
-// GET a single post 
 router.get('/:id', (req, res) => {
     Blogpost.findOne({
       where: {
@@ -63,11 +61,9 @@ router.get('/:id', (req, res) => {
         console.log(err);
         res.status(500).json(err);
       });
-  });
+});
 
-// creating a post
 router.post('/', withAuth, (req, res) => {
-    // create 1 post
     Blogpost.create({ 
         title: req.body.title,
         content: req.body.content,
@@ -75,12 +71,11 @@ router.post('/', withAuth, (req, res) => {
     })
         .then(dbPostData => res.json(dbPostData))
         .catch(err => {
-            console.log(err);
-            res.status(500).json(err); 
+          console.log(err);
+          res.status(500).json(err); 
         });
 });
 
-// update a post title
 router.put('/:id', withAuth, (req, res) => {
     Blogpost.update({
         title: req.body.title,
@@ -103,7 +98,6 @@ router.put('/:id', withAuth, (req, res) => {
     });
 });
 
-// delete a post 
 router.delete('/:id', withAuth, (req, res) => {
     Blogpost.destroy({
         where: {

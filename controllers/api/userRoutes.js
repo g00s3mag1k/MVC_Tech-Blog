@@ -26,7 +26,7 @@ router.get('/:id', (req, res) => {
             model: Comment,
             attributes: ['id', 'comment_text', 'created_at'],
             include: {
-              model: Post,
+              model: Blogpost,
               attributes: ['title']
             }
           },
@@ -50,7 +50,8 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    User.create({ username: req.body.username, 
+    User.create({ 
+    username: req.body.username, 
       password: req.body.password
     })
     .then(dbUserData => {
@@ -117,7 +118,6 @@ router.post('/login', (req, res) => {
           res.status(400).json({ message: 'No user with that username!'});
           return;
       }
-
       const validPassword = dbUserData.checkPassword(req.body.password);
 
       if (!validPassword) {

@@ -6,7 +6,6 @@ const withAuth = require('../utils/auth');
 router.get('/', withAuth, (req, res) => {
     Blogpost.findAll({
       where: {
-        // use the ID from the session
         user_id: req.session.user_id
       },
       attributes: ['id', 'title', 'content', 'created_at'],
@@ -70,7 +69,6 @@ router.get('/edit/:id', withAuth, (req, res) => {
         });
 })
 
-// redirecting users to sign in
 router.get('/new', (req, res) => {
     res.render('new-post');
 });

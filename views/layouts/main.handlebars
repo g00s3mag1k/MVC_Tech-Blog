@@ -13,7 +13,7 @@
             <nav class="nav">
                 <a class="link" href="/">Home</a>
                 <a class="link" href="/dashboard">Dashboard</a>
-                {{#if logged_in}}
+                {{#if loggedIn}}
                 <a id="logout" class="link" href="/">Logout</a>
                 <p class="login-info">logged in under {{username}}</p>
                 {{else}}
@@ -29,7 +29,7 @@
             Share with Friends!!
         </footer>
     </div>
-    {{#if logged_in}}
+    {{#if loggedIn}}
     <script src="/js/logout.js"></script>
     {{/if}}
 </body>
