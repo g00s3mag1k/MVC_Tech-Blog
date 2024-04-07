@@ -27,7 +27,7 @@ User.hasMany(Comment, {
 });
 
 Blogpost.hasMany(Comment, {
-  foreginKey: 'post_id',
+  foreignKey: 'post_id',
   onDelete: 'cascade'
 });
 

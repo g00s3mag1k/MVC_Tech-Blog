@@ -1,118 +1,239 @@
 const router = require('express').Router();
-const { Blogpost, User, Comment} = require('../../models');
+const { Blogpost, User, Comment } = require('../../models');
 const sequelize = require('../../config/connection');
 const withAuth = require('../../utils/auth');
 
+// Get all blog posts
 router.get('/', (req, res) => {
     Blogpost.findAll({
-        attributes: ['id', 'title', 'content', 'created_at'],
-        order: [['created_at', 'DESC']],          
+        attributes: ['id', 'title', 'content'],
+        order: [['DESC']],
         include: [
             {
-            model: User,
-            attributes: ['username']
-            },
-            {
-            model: Comment,
-            attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-            include: {
                 model: User,
                 attributes: ['username']
-            }
+            },
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
             }
         ]
     })
-        .then(dbPostData => res.json(dbPostData.reverse()))
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
+    .then(dbPostData => res.status(200).json(dbPostData.reverse()))
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
 
+// Get a specific blog post by ID
 router.get('/:id', (req, res) => {
     Blogpost.findOne({
-      where: {
-        id: req.params.id
-      },
-      attributes: ['id', 'content','title','created_at'],
-      include: [
-        {
-          model: User,
-          attributes: ['username']
-        },
-        {
-          model: Comment,
-          attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-          include: {
-            model: User,
-            attributes: ['username']
-          }
-        }
-      ]
+        where: { id: req.params.id },
+        attributes: ['id', 'content', 'title'],
+        include: [
+            {
+                model: User,
+                attributes: ['username']
+            },
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            }
+        ]
     })
-      .then(dbPostData => {
+    .then(dbPostData => {
         if (!dbPostData) {
-          res.status(404).json({ message: 'No post found with this id' });
-          return;
+            res.status(404).json({ message: 'No post found with this id' });
+            return;
         }
-        res.json(dbPostData);
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+        res.status(200).json(dbPostData);
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
 
+// Create a new blog post
 router.post('/', withAuth, (req, res) => {
-    Blogpost.create({ 
+    Blogpost.create({
         title: req.body.title,
         content: req.body.content,
         user_id: req.session.user_id
     })
-        .then(dbPostData => res.json(dbPostData))
-        .catch(err => {
-          console.log(err);
-          res.status(500).json(err); 
-        });
+    .then(dbPostData => res.status(201).json(dbPostData))
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
 
+// Update a blog post
 router.put('/:id', withAuth, (req, res) => {
     Blogpost.update({
         title: req.body.title,
         content: req.body.content
-      },
-      {
-        where: {
-          id: req.params.id
-        }
-    }).then(dbPostData => {
-        if (!dbPostData) {
+    }, {
+        where: { id: req.params.id }
+    })
+    .then(dbPostData => {
+        if (!dbPostData[0]) {
             res.status(404).json({ message: 'No post found!' });
             return;
         }
-        res.json(dbPostData);
+        res.status(200).json(dbPostData);
     })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
     });
 });
 
+// Delete a blog post
 router.delete('/:id', withAuth, (req, res) => {
     Blogpost.destroy({
-        where: {
-            id: req.params.id 
-        }
-    }).then(dbPostData => {
+        where: { id: req.params.id }
+    })
+    .then(dbPostData => {
         if (!dbPostData) {
             res.status(404).json({ message: 'No post found with this id!' });
             return;
         }
-        res.json(dbPostData);
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json(err);
+        res.status(204).json(dbPostData);
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
     });
 });
 
 module.exports = router;
+
+
+// const router = require('express').Router();
+// const { Blogpost, User, Comment} = require('../../models');
+// const sequelize = require('../../config/connection');
+// const withAuth = require('../../utils/auth');
+
+// router.get('/', (req, res) => {
+//     Blogpost.findAll({
+//         attributes: ['id', 'title', 'content', 'created_at'],
+//         order: [['created_at', 'DESC']],          
+//         include: [
+//             {
+//             model: User,
+//             attributes: ['username']
+//             },
+//             {
+//             model: Comment,
+//             attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+//             include: {
+//                 model: User,
+//                 attributes: ['username']
+//             }
+//             }
+//         ]
+//     })
+//         .then(dbPostData => res.json(dbPostData.reverse()))
+//         .catch(err => {
+//             console.log(err);
+//             res.status(500).json(err);
+//         });
+// });
+
+// router.get('/:id', (req, res) => {
+//     Blogpost.findOne({
+//       where: {
+//         id: req.params.id
+//       },
+//       attributes: ['id', 'content','title','created_at'],
+//       include: [
+//         {
+//           model: User,
+//           attributes: ['username']
+//         },
+//         {
+//           model: Comment,
+//           attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+//           include: {
+//             model: User,
+//             attributes: ['username']
+//           }
+//         }
+//       ]
+//     })
+//       .then(dbPostData => {
+//         if (!dbPostData) {
+//           res.status(404).json({ message: 'No post found with this id' });
+//           return;
+//         }
+//         res.json(dbPostData);
+//       })
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).json(err);
+//       });
+// });
+
+// router.post('/', withAuth, (req, res) => {
+//     Blogpost.create({ 
+//         title: req.body.title,
+//         content: req.body.content,
+//         user_id: req.session.user_id
+//     })
+//         .then(dbPostData => res.json(dbPostData))
+//         .catch(err => {
+//           console.log(err);
+//           res.status(500).json(err); 
+//         });
+// });
+
+// router.put('/:id', withAuth, (req, res) => {
+//     Blogpost.update({
+//         title: req.body.title,
+//         content: req.body.content
+//       },
+//       {
+//         where: {
+//           id: req.params.id
+//         }
+//     }).then(dbPostData => {
+//         if (!dbPostData) {
+//             res.status(404).json({ message: 'No post found!' });
+//             return;
+//         }
+//         res.json(dbPostData);
+//     })
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).json(err);
+//     });
+// });
+
+// router.delete('/:id', withAuth, (req, res) => {
+//     Blogpost.destroy({
+//         where: {
+//             id: req.params.id 
+//         }
+//     }).then(dbPostData => {
+//         if (!dbPostData) {
+//             res.status(404).json({ message: 'No post found with this id!' });
+//             return;
+//         }
+//         res.json(dbPostData);
+//     }).catch(err => {
+//         console.log(err);
+//         res.status(500).json(err);
+//     });
+// });
+
+// module.exports = router;
