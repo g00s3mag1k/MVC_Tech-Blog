@@ -1,6 +1,6 @@
 # MVC_Tech-Blog
 
-Heroku URL to app: 
+Heroku URL to app: https://mvctechnech-044132ff6c4f.herokuapp.com/
 
 ## Description
 
