@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechNech Blog Site</title>
-     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <div class="wrap">
-        <header>
+        <header class="hero">
             <nav class="nav">
                 <a class="link" href="/">Home</a>
                 <a class="link" href="/dashboard">Dashboard</a>
                 {{#if loggedIn}}
                 <a id="logout" class="link" href="/">Logout</a>
-                <p class="login-info">logged in under {{username}}</p>
+                {{!-- <p class="link">logged in under {{username}}</p> --}}
                 {{else}}
                 <a class="link" href="/login">Login</a>
                 {{/if}}
@@ -30,7 +30,7 @@
         </footer>
     </div>
     {{#if loggedIn}}
-    <script src="/js/logout.js"></script>
+    <script src="/public/js/logout.js"></script>
     {{/if}}
 </body>
 </html>
